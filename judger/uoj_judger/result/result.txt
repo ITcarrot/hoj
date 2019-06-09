@@ -1,0 +1,10 @@
+score 0
+time 0
+memory 0
+details
+<tests>
+<custom-test info="Time Limit Exceeded" time="-1" memory="-1">
+<p>[<strong>time limit:</strong> 10s]</p>
+<out></out>
+</custom-test>
+</tests>

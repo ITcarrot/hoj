@@ -1,0 +1,10 @@
+{
+    "uoj_protocol": "http",
+    "uoj_host": "10.248.5.4 (Website)",
+    "judger_name": "Judger Name",
+    "judger_password": "Judger Password",
+    "socket_port": 2333,
+    "socket_password": "",
+    "svn_username": "root",
+    "svn_password": ""
+}
