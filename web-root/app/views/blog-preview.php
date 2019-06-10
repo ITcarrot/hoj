@@ -43,12 +43,12 @@
 			<?php endforeach ?>
 			</li>
 			<?php if ($is_preview): ?>
-  			<li><a href="<?= HTML::blog_url(UOJContext::userid(), '/blog/'.$blog['id']) ?>">阅读全文</a></li>
+  			<li><a href="<?= HTML::blog_url($blog['poster'], '/blog/'.$blog['id']) ?>">阅读全文</a></li>
   			<?php endif ?>
-  			<li><a href="<?= HTML::blog_url(UOJContext::userid(), '/blog/'.$blog['id'].'/print') ?>">打印</a></li>
+  			<li><a href="<?= HTML::blog_url($blog['poster'], '/blog/'.$blog['id'].'/print') ?>">打印</a></li>
   			<?php if (Auth::check() && (isSuperUser(Auth::user()) || Auth::id() == $blog['poster'])): ?>
-			<li><a href="<?=HTML::blog_url(UOJContext::userid(), '/'.$blog_type.'/'.$blog['id'].'/write')?>">修改</a></li>
-			<li><a href="<?=HTML::blog_url(UOJContext::userid(), '/blog/'.$blog['id'].'/delete')?>">删除</a></li>
+			<li><a href="<?=HTML::blog_url($blog['poster'], '/'.$blog_type.'/'.$blog['id'].'/write')?>">修改</a></li>
+			<li><a href="<?=HTML::blog_url($blog['poster'], '/blog/'.$blog['id'].'/delete')?>">删除</a></li>
 			<?php endif ?>
   			<li><?= getClickZanBlock('B', $blog['id'], $blog['zan']) ?></li>
 		</ul>

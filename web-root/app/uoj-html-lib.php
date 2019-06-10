@@ -971,7 +971,8 @@ function echoBlog($blog, $config = array()) {
 	uojIncludeView('blog-preview', $config);
 }
 function echoBlogTag($tag) {
-	echo '<a href="',HTML::blog_url(UOJContext::userid(), '/archive?tag='.urlencode($tag)),'"><span class="badge">', HTML::escape($tag), '</span></a>';
+	global $blog;
+	echo '<a href="',HTML::blog_url($blog['poster'], '/archive?tag='.urlencode($tag)),'"><span class="badge">', HTML::escape($tag), '</span></a>';
 }
 
 function echoUOJPageHeader($page_title, $extra_config = array()) {
