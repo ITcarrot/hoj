@@ -39,6 +39,7 @@
 			case 22:
 				EchoBlogAndDie(220,false);
 				EchoBlogAndDie(81);
+			case 24:EchoBlogAndDie(529);
 		}
 		die('<div class="text-center"><div style="font-size:233px">404</div><p>唔……未找到该页面……你是从哪里点进来的……&gt;_&lt;……</p></div>');
 	}
@@ -63,6 +64,7 @@
 				<li id="show_btn4"><a onclick="show(4)">题目与HACK</a></li>
 				<li id="show_btn5"><a onclick="show(5)">比赛、练习和天梯</a></li>
 				<li id="show_btn6"><a onclick="show(6)">测评环境</a></li>
+				<li id="show_btn24"><a onclick="show(24)">题解系统</a></li>
 				<li id="show_btn7"><a onclick="show(7)">Rating和活跃度</a></li>
 			</ul>
 			<li id="list_btn3"><a onclick="list(3)">个人信息及博客指南</a></li>
@@ -101,7 +103,7 @@ $('#content').css("height",$(window).height()-40);
 $(window).resize(function(){
 	$('#content').css("height",$(window).height()-40);
 });
-for(var i=1;i<=23;i++)
+for(var i=1;i<=24;i++)
 	$('#content').append('<div id="content' + i + '" style="display:none"></div>');
 function list(id){
 	var frame=$('#list'+id),i;
@@ -118,7 +120,7 @@ function show(id){
 	var frame=$('#content'+id),i;
 	if(frame.css('display') == 'block')
 		return;
-	for(i=1;i<=23;i++){
+	for(i=1;i<=24;i++){
 		$('#content'+i).slideUp('slow');
 		$('#show_btn'+i).removeClass('active');
 	}
