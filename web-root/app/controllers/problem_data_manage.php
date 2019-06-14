@@ -57,7 +57,7 @@
 		if(is_string($type)){
 			echo '<code class="sh_'.$type.'">';
 		}
-		echo htmlspecialchars(uojFilePreview($file_full_name, 3000));
+		echo uojTextEncode(uojFilePreview($file_full_name, 3000), array('html_escape' => true , 'allow_CR' => true));
 		if(is_string($type)){
 			echo '</code>';
 		}
