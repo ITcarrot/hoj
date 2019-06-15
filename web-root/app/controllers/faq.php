@@ -17,7 +17,7 @@
 			case 8:EchoBlogAndDie(450);
 			case 9:
 				EchoBlogAndDie(451,false);
-				echo '<iframe src="http://latex.codecogs.com/eqneditor/editor.php" height="600px" width="100%" frameborder="no" scrolling="no" marginwidth=0 marginheight=0 hspace="0" vspace="-150"></iframe>';
+				uojIncludeView('math-editor');
 				die();
 			case 10:EchoBlogAndDie(141);
 			case 11:EchoBlogAndDie(452);

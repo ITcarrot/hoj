@@ -94,8 +94,8 @@
 			<li><a href="/solution/new?blog=<?= $blog['id'] ?>">添加到题解</a></li>
 		<?php endif ?>
 		<li><a id="button-display-hack" style="cursor: pointer;" role="tab">公式编辑器</a></li>
-		<div id="div-form-hack" style="display:none" class="">
-			<iframe src="http://latex.codecogs.com/eqneditor/editor.php" height="600px" width="100%" frameborder="no" scrolling="no" marginwidth=0 marginheight=0 hspace="0" vspace="-150"></iframe>
+		<div id="div-form-hack" style="display:none">
+			<?php uojIncludeView('math-editor') ?>
 		</div>
 		<script type="text/javascript">
 			$(document).ready(function() {

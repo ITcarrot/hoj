@@ -173,13 +173,14 @@
 		<p><img id="preview" style="height:250px;min-height:250px;"></p>
 		<?php
 			foreach($piclist as $row){
-				echo '<span class="preview_src" style="cursor: pointer;">',$row,'</span>';
+				echo '<span class="preview_src">',$row,'</span>';
 			}
 		?>
 		<style>
 		.preview_src{
 			display:inline-block;
 			padding:5px 20px;
+			cursor: pointer;
 		}
 		</style>
 		<script>
