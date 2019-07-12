@@ -65,13 +65,13 @@
 			<tbody>
 				<?php
 					$len=count($liveness);
-					for($i=0;$i<$len && $i<5;$i++){
+					for($i=0;$i<$len && $i<5 && $liveness[$i][1]>0;$i++){
 						echo '<tr>';
 						echo '<td>',getUserLink($liveness[$i][0]),'</td>';
 						echo '<td><span class="uoj-username" data-link="0" data-rating="',($liveness[$i][1]+1000),'">',$liveness[$i][1],'</span></td>';
 						echo '</tr>';
 					}
-					for($i=$len;$i<5;$i++)
+					for( ;$i<5;$i++)
 						echo '<tr><td>&nbsp;</td><td></td></tr>';
 				?>
 				<tr><td class="text-center" colspan="233"><a href="/liveness" class="btn btn-default">查看全部</a></td></tr>
