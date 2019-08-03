@@ -47,6 +47,8 @@
 		DB::query("insert into solutions value({$val_res[1]['id']}, {$val_res[2]['id']}, '{$myUser['username']}', 0)");
 		die('提交成功，请等候管理员审核');
 	}
+	
+	$blogs = DB::query("select id, title from blogs where poster = '{$myUser['username']}' order by post_time desc");
 ?>
 
 <?php echoUOJPageHeader('添加题解') ?>
@@ -60,9 +62,13 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-2 control-label">博客编号</label>
+		<label class="col-sm-2 control-label">博客</label>
 		<div class="col-sm-3">
-			<input class="form-control" type="text" id="blog" value="<?= $_GET['blog'] ?>">
+			<select class="form-control" id="blog">
+				<?php while($blog = DB::fetch($blogs)): ?>
+					<option value="<?= $blog['id'] ?>" <?= $blog['id']==$_GET['blog'] ? 'selected="selected"' : '' ?> >#<?= $blog['id'] ?> <?= $blog['title'] ?></option>
+				<?php endwhile ?>
+			</select>
 		</div>
 	</div>
 </form>
