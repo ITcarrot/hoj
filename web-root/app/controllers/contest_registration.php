@@ -9,6 +9,8 @@
 		redirectToLogin();
 	} elseif (hasContestPermission($myUser, $contest) || hasRegistered($myUser, $contest)) {
 		redirectTo('/contests');
+	} elseif (isContestUser(Auth::user())&&$contest['is_open']!=1) {
+		die("<script>alert('该场比赛暂不开放！');window.location.href='/contests';</script>");
 	}
 	
 	$register_form = new UOJForm('register');

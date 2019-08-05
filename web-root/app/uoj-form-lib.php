@@ -660,7 +660,7 @@ EOD;
 		}
 		
 		$form->handle = function(&$vdata) use($form_name, $requirement, $zip_file_name_gen, $handle) {
-			global $myUser;
+			global $myUser, $problem_extra_config;
 			
 			if ($myUser == null) {
 				redirectToLogin();
@@ -680,8 +680,8 @@ EOD;
 			foreach ($requirement as $req) {
 				if ($req['type'] == "source code") {
 					$language = $_POST["{$form_name}_{$req['name']}_language"];
-					$optimized = $_POST["{$form_name}_{$req['name']}_optimized"];
-					$cstandard = $_POST["{$form_name}_{$req['name']}_cstandard"];
+					$optimized = $problem_extra_config['compile_option'][$language][0] ?? $_POST["{$form_name}_{$req['name']}_optimized"];
+					$cstandard = $problem_extra_config['compile_option'][$language][1] ?? $_POST["{$form_name}_{$req['name']}_cstandard"];
 					$content['config'][] = array("{$req['name']}_language", $language);
 					if (($language == 'C++' || $language == 'C') && in_array($optimized, array('-O1','-O2','-O3','-Ofast')))
 						$content['config'][] = array("{$req['name']}_optimized", $optimized);

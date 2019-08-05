@@ -26,7 +26,8 @@ function autosave_locally(interval, name, target) {
 
 	target.val(localStorage.getItem(full_name));
 	var save = function() {
-		localStorage.setItem(full_name, target.val());
+		if(target.val().length <= 131072)
+			localStorage.setItem(full_name, target.val());
 		setTimeout(save, interval);
 	};
 	setTimeout(save, interval);
@@ -139,7 +140,7 @@ $.fn.source_code_form_group = function(name, text, langs_options_html) {
 		div_file.css('display', 'none');
 		input_use_advanced_editor[0].checked = true;
 
-		var prefer_lang_option = $.cookie('hoj_prefer_lang_option') || '{"Pascal":["Default"],"C":["Default","Default"],"C++":["Default","Default"]}';
+		var prefer_lang_option = window.force_lang_option || $.cookie('hoj_prefer_lang_option') || '{"Pascal":["Default"],"C":["Default","Default"],"C++":["Default","Default"]}';
 		prefer_lang_option = JSON.parse(prefer_lang_option);
 		var show_lang_option = function() {
 			if(/^Python/.test($(this).val())){

@@ -158,7 +158,7 @@
 		}
 	}
 	
-	if (isSuperUser($myUser)) {
+	if (hasContestPermission($myUser, $contest)) {
 		if (CONTEST_PENDING_FINAL_TEST <= $contest['cur_progress']) {
 			$start_test_form = new UOJForm('start_test');
 			$start_test_form->handle = function() {
@@ -295,7 +295,7 @@ EOD;
 			)
 		);
 		
-		if (isSuperUser(Auth::user())) {
+		if (hasContestPermission($myUser, $contest)) {
 			echo '<div class="text-center">';
 			echo '<button id="button-display-post-notice" type="button" class="btn btn-danger btn-xs">发布比赛公告</button>';
 			echo '</div>';
@@ -541,7 +541,7 @@ EOD;
 	<div class="col-sm-3">
 	<?php endif ?>	
 		<a href="/contest/<?=$contest['id']?>/registrants" class="btn btn-info btn-block"><?= UOJLocale::get('contests::contest registrants') ?></a>
-		<?php if (isSuperUser($myUser)): ?>
+		<?php if (hasContestPermission($myUser, $contest)): ?>
 		<a href="/contest/<?=$contest['id']?>/manage" class="btn btn-primary btn-block">管理</a>
 		<?php if (isset($start_test_form)): ?>
 		<div class="top-buffer-sm">

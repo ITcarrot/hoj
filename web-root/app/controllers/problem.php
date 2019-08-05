@@ -42,12 +42,14 @@
 			become403Page();
 		}
 	}
-	if(isContestUser($myUser)&&(!contest || $contest['is_open']!=1)){
+	if(isContestUser($myUser)&&(!$contest || $contest['is_open']!=1)){
 		becomeMsgPage('请从比赛处查看题目');
 	}
 
 	$submission_requirement = json_decode($problem['submission_requirement'], true);
 	$problem_extra_config = getProblemExtraConfig($problem);
+	if($is_in_contest)
+		$problem_extra_config['compile_option'] = json_decode($contest['extra_config']['compile_option'], true);
 	
 	$can_use_zip_upload = true;
 	foreach ($submission_requirement as $req) {
@@ -93,31 +95,6 @@
 		header('Location: /submission/'.DB::insert_id());
 		die();
  	}
-	function handleCustomTestUpload($zip_file_name, $content, $tot_size) {
-		global $problem, $contest, $myUser;
-		
-		$content['config'][] = array('problem_id', $problem['id']);
-		$content['config'][] = array('custom_test', 'on');
-		$esc_content = DB::escape(json_encode($content));
-
-		$language = '/';
-		foreach ($content['config'] as $row) {
-			if (strEndWith($row[0], '_language')) {
-				$language = $row[1];
-				break;
-			}
-		}
-		if ($language != '/') {
-			Cookie::set('uoj_preferred_language', $language, time() + 60 * 60 * 24 * 365, '/');
-		}
-		$esc_language = DB::escape($language);
- 		
-		$result = array();
-		$result['status'] = "Waiting";
-		$result_json = json_encode($result);
-		
-		DB::insert("insert into custom_test_submissions (problem_id, submit_time, submitter, content, status, result) values ({$problem['id']}, now(), '{$myUser['username']}', '$esc_content', '{$result['status']}', '$result_json')");
- 	}
 	
 	if ($can_use_zip_upload) {
 		$zip_answer_form = newZipSubmissionForm('zip_answer',
@@ -131,7 +108,6 @@
 			}
 			return '';
 		};
-		$zip_answer_form->succ_href = $is_in_contest ? "/contest/{$contest['id']}/submissions" : '/submissions';
 		$zip_answer_form->runAtServer();
 	}
 	
@@ -241,6 +217,9 @@
 		<?php endif ?>
 	</div>
 	<div class="tab-pane" id="tab-submit-answer">
+		<?php if (isset($problem_extra_config['compile_option'])): ?>
+		<script>window.force_lang_option = <?= "'".json_encode($problem_extra_config['compile_option'])."'" ?></script>
+		<?php endif ?>
 		<div class="top-buffer-sm"></div>
 		<?php if ($can_use_zip_upload): ?>
 		<?php $zip_answer_form->printHTML(); ?>
@@ -248,6 +227,12 @@
 		<strong><?= UOJLocale::get('problems::or upload files one by one') ?><br /></strong>
 		<?php endif ?>
 		<?php $answer_form->printHTML(); ?>
+		<?php if (isset($problem_extra_config['compile_option'])): ?>
+		<script>
+			$('#input-answer_answer_optimized')[0].disabled=1;
+			$('#input-answer_answer_cstandard')[0].disabled=1;
+		</script>
+		<?php endif ?>
 	</div>
 </div>
 <?php echoUOJPageFooter() ?>

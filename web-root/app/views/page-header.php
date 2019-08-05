@@ -88,7 +88,7 @@
 		<script>begin=new Date("<?=preg_replace('/-/','/',UOJTime::$time_now_str)?>").getTime();</script>
 		<?php if (is_array($REQUIRE_LIB)):?>
 		<!-- HOJ extra js -->
-		<script src="/min/js?v=190412&rq=<?=urlencode(json_encode($REQUIRE_LIB))?>"></script>
+		<script src="/min/js?v=190805&rq=<?=urlencode(json_encode($REQUIRE_LIB))?>"></script>
 		<?php endif ?>
 		
 		
