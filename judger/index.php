@@ -12,7 +12,7 @@
 	
 	$name='Judger Name';
 	$passwd='Judger Password';
-	$web='http://10.248.5.4 (Website)'
+	$web='http://10.248.5.4 (Website)';
 	
 	if(validateUInt($_GET['id'])&&$_GET['password']===$passwd){
 		set_time_limit(0);
