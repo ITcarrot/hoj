@@ -261,7 +261,7 @@ function echoSubmission($submission, $config, $user) {
 	} else {
 		$size_str = sprintf("%.1f", $submission['tot_size'] / 1024) . 'kb';
 	}
-	if(isset($submission['contest_id'])){
+	if(isset($submission['contest_id']) && queryContest($submission['contest_id'])['status'] == 'unfinished'){
 		$size_str = '/';
 	}
 	echo '<td>', $size_str, '</td>';
@@ -498,6 +498,54 @@ EOD;
 	$zip_file->close();
 }
 
+class SubmissionDetailsStyler {
+	public $show_score = true;
+	public $show_small_tip = true;
+	public $collapse_in = false;
+	public $fade_all_details = false;
+	public function shouldFadeDetails($info) {
+		return $this->fade_all_details || $info == 'Extra Test Passed';
+	}
+}
+class CustomTestSubmissionDetailsStyler {
+	public $show_score = true;
+	public $show_small_tip = false;
+	public $collapse_in = true;
+	public $fade_all_details = false;
+	public function shouldFadeDetails($info) {
+		return $this->fade_all_details;
+	}
+}
+class HackDetailsStyler {
+	public $show_score = false;
+	public $show_small_tip = false;
+	public $collapse_in = true;
+	public $fade_all_details = false;
+	public function shouldFadeDetails($info) {
+		return $this->fade_all_details;
+	}
+}
+
+function getTestInfoClass($info) {
+	$info = str_replace('Extra Test Failed : ', '', $info);
+	$info = preg_replace('/ on [0-9]+$/', '', $info);
+	if ($info == 'Accepted' || $info == 'Extra Test Passed' || $info == 'Success') {
+		return 'panel-uoj-accepted';
+	} elseif ($info == 'Time Limit Exceeded') {
+		return 'panel-uoj-tle';
+	} elseif ($info == 'Acceptable Answer') {
+		return 'panel-uoj-acceptable-answer';
+	} elseif ($info == 'Runtime Error' || $info == 'Dangerous Syscalls') {
+		return 'panel-uoj-re';
+	} elseif ($info == 'Memory Limit Exceeded') {
+		return 'panel-uoj-mle';
+	} elseif ($info == 'Judgment Failed' || $info == 'Skipped') {
+		return 'panel-uoj-jgf';
+	} else {
+		return 'panel-uoj-wrong';
+	}
+}
+
 class JudgementDetailsPrinter {
 	private $name;
 	private $styler;
@@ -531,7 +579,7 @@ class JudgementDetailsPrinter {
 			$subtask_score = $node->getAttribute('score');
 			$subtask_info = $node->getAttribute('info');
 
-			echo '<div class="panel ', $this->styler->getTestInfoClass($subtask_info), '">';
+			echo '<div class="panel ', getTestInfoClass($subtask_info), '">';
 
 			$accordion_parent = "{$this->name}_details_accordion";
 			$accordion_collapse =  "{$accordion_parent}_collapse_subtask_{$subtask_num}";
@@ -578,7 +626,7 @@ class JudgementDetailsPrinter {
 			$test_time = $node->getAttribute('time');
 			$test_memory = $node->getAttribute('memory');
 
-			echo '<div class="panel ', $this->styler->getTestInfoClass($test_info), '">';
+			echo '<div class="panel ', getTestInfoClass($test_info), '">';
 
 			$accordion_parent = "{$this->name}_details_accordion";
 			if ($this->subtask_num != null) {
@@ -647,7 +695,7 @@ class JudgementDetailsPrinter {
 			$test_time = $node->getAttribute('time');
 			$test_memory = $node->getAttribute('memory');
 
-			echo '<div class="panel ', $this->styler->getTestInfoClass($test_info), '">';
+			echo '<div class="panel ', getTestInfoClass($test_info), '">';
 
 			$accordion_parent = "{$this->name}_details_accordion";
 			$accordion_collapse = "{$accordion_parent}_collapse_custom_test";
@@ -723,7 +771,7 @@ class JudgementDetailsPrinter {
 		$this->styler = $styler;
 		$this->details = $details;
 		$this->dom = new DOMDocument();
-		if (!$this->dom->loadXML($this->details)) {
+		if (!@$this->dom->loadXML($this->details)) {
 			throw new Exception("XML syntax error");
 		}
 		$this->details = '';
@@ -740,85 +788,6 @@ function echoJudgementDetails($raw_details, $styler, $name) {
 		$printer->printHTML();
 	} catch (Exception $e) {
 		echo 'Failed to show details';
-	}
-}
-
-class SubmissionDetailsStyler {
-	public $show_score = true;
-	public $show_small_tip = true;
-	public $collapse_in = false;
-	public $fade_all_details = false;
-	public function getTestInfoClass($info) {
-		if ($info == 'Accepted' || $info == 'Extra Test Passed') {
-			return 'panel-uoj-accepted';
-		} elseif ($info == 'Time Limit Exceeded') {
-			return 'panel-uoj-tle';
-		} elseif ($info == 'Acceptable Answer') {
-			return 'panel-uoj-acceptable-answer';
-		} elseif ($info == 'Runtime Error' || $info == 'Dangerous Syscalls') {
-			return 'panel-uoj-re';
-		} elseif ($info == 'Memory Limit Exceeded') {
-			return 'panel-uoj-mle';
-		} elseif ($info == 'Judgment Failed') {
-			return 'panel-uoj-jgf';
-		} else {
-			return 'panel-uoj-wrong';
-		}
-	}
-	public function shouldFadeDetails($info) {
-		return $this->fade_all_details || $info == 'Extra Test Passed';
-	}
-}
-class CustomTestSubmissionDetailsStyler {
-	public $show_score = true;
-	public $show_small_tip = false;
-	public $collapse_in = true;
-	public $fade_all_details = false;
-	public function getTestInfoClass($info) {
-		if ($info == 'Success' || $info == 'Extra Test Passed') {
-			return 'panel-uoj-accepted';
-		} elseif ($info == 'Time Limit Exceeded') {
-			return 'panel-uoj-tle';
-		} elseif ($info == 'Acceptable Answer') {
-			return 'panel-uoj-acceptable-answer';
-		} elseif ($info == 'Runtime Error' || $info == 'Dangerous Syscalls') {
-			return 'panel-uoj-re';
-		} elseif ($info == 'Memory Limit Exceeded') {
-			return 'panel-uoj-mle';
-		} elseif ($info == 'Judgment Failed') {
-			return 'panel-uoj-jgf';
-		} else {
-			return 'panel-uoj-wrong';
-		}
-	}
-	public function shouldFadeDetails($info) {
-		return $this->fade_all_details;
-	}
-}
-class HackDetailsStyler {
-	public $show_score = false;
-	public $show_small_tip = false;
-	public $collapse_in = true;
-	public $fade_all_details = false;
-	public function getTestInfoClass($info) {
-		if ($info == 'Accepted' || $info == 'Extra Test Passed') {
-			return 'panel-uoj-accepted';
-		} elseif ($info == 'Time Limit Exceeded') {
-			return 'panel-uoj-tle';
-		} elseif ($info == 'Acceptable Answer') {
-			return 'panel-uoj-acceptable-answer';
-		} elseif ($info == 'Runtime Error' || $info == 'Dangerous Syscalls') {
-			return 'panel-uoj-re';
-		} elseif ($info == 'Memory Limit Exceeded') {
-			return 'panel-uoj-mle';
-		} elseif ($info == 'Judgment Failed') {
-			return 'panel-uoj-jgf';
-		} else {
-			return 'panel-uoj-wrong';
-		}
-	}
-	public function shouldFadeDetails($info) {
-		return $this->fade_all_details;
 	}
 }
 

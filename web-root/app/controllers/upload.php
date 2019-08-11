@@ -14,7 +14,7 @@
 		else
   		{
 			$up_filename="/tmp/upload";
-			unlink($up_filename);
+			@unlink($up_filename);
 			move_uploaded_file($_FILES["problem_data_file"]["tmp_name"], $up_filename);
 			DB::manage_log('upload','upload a file');
   		}

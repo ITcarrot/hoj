@@ -321,7 +321,6 @@
 					'page_len' => 5
 				));
 				foreach ($submissions_pag->get() as $submission){
-					$problem = queryProblemBrief($submission['problem_id']);
 					$submission_result = json_decode($submission['result'], true);
 					echo '<dl class="dl-horizontal">';
 					echo '<dt>id</dt>';
@@ -333,7 +332,19 @@
 					echo '<dt>judge_time</dt>';
 					echo '<dd>', $submission['judge_time'], '</dd>';
 					echo '</dl>';
-					echoSubmissionContent($submission, getProblemCustomTestRequirement($problem));
+					echoSubmissionContent($submission, 
+						array(
+							array(
+								'name' => 'answer',
+								'type' => 'source code',
+								'file_name' => 'answer.code'
+							),
+							array(
+								'name' => 'input',
+								'type' => 'text',
+								'file_name' => 'input.txt'
+							)
+						));
 					echoCustomTestSubmissionDetails($submission_result['details'], "submission-{$submission['id']}-details");
 				}
 			?>

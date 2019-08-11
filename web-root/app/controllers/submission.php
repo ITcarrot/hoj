@@ -23,7 +23,7 @@
 	if (!isSubmissionVisibleToUser($submission, $problem, $myUser)) {
 		become403Page();
 	}
-	if(isContestUser($myUser)&&(!contest || $contest['is_open']!=1)){
+	if(isContestUser($myUser)&&(!$contest || $contest['is_open']!=1)){
 		becomeMsgPage('该功能不对比赛账户开放');
 	}
 	

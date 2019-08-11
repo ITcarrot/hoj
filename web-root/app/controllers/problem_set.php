@@ -12,6 +12,7 @@
 	}
 	if (isSuperUser($myUser)) {
 		$new_problem_form = new UOJForm('new_problem');
+		$empty_problem = DB::selectFirst("select id from problems where title='New Problem' and is_hidden = 1 and ac_num = 0 and id in (select id from problems_contents where statement = '' and (file is null or file = '')) order by id");
 		$new_problem_form->handle = function() {
 			$esc_config = DB::escape('{"view_content_type":"ALL_AFTER_AC","view_details_type":"ALL","view_all_details_type":"ALL"}');
 			$esc_sconfig=DB::escape('[{"name":"answer","type":"source code","file_name":"answer.code"}]');
@@ -23,7 +24,10 @@
 		};
 		$new_problem_form->submit_button_config['class_str'] = 'btn btn-primary';
 		$new_problem_form->submit_button_config['text'] = UOJLocale::get('problems::add new');
-		$new_problem_form->submit_button_config['smart_confirm'] = '';
+		if($empty_problem)
+			$new_problem_form->submit_button_config['confirm_text'] = '已有题号为'.$empty_problem['id'].'的空题目，是否仍要添加题目？';
+		else
+			$new_problem_form->submit_button_config['smart_confirm'] = '';
 
 		$new_problem_form->runAtServer();
 	}
@@ -222,4 +226,3 @@ $('#input-show_submit_mode').click(function() {
 });
 </script>
 <?php echoUOJPageFooter() ?>
-

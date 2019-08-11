@@ -151,31 +151,6 @@ function getProblemExtraConfig($problem) {
 function getProblemSubmissionRequirement($problem) {
 	return json_decode($problem['submission_requirement'], true);
 }
-function getProblemCustomTestRequirement($problem) {
-	$extra_config = json_decode($problem['extra_config'], true);
-	if (isset($extra_config['custom_test_requirement'])) {
-		return $extra_config['custom_test_requirement'];
-	} else {
-		$answer = array(
-			'name' => 'answer',
-			'type' => 'source code',
-			'file_name' => 'answer.code'
-		);
-		foreach (getProblemSubmissionRequirement($problem) as $req) {
-			if ($req['name'] == 'answer' && $req['type'] == 'source code' && isset($req['languages'])) {
-				$answer['languages'] = $req['languages'];
-			}
-		}
-		return array(
-			$answer,
-			array(
-				'name' => 'input',
-				'type' => 'text',
-				'file_name' => 'input.txt'
-			)
-		);
-	}
-}
 
 function sendSystemMsg($username, $title, $content) {
 	$content = DB::escape($content);

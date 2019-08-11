@@ -154,6 +154,7 @@
 ?>
 
 <?php echoUOJPageHeader(HTML::stripTags($problem['title']) . ' - 题解') ?>
+<a class="btn btn-default pull-left" href="/problem/<?= $problem['id'] ?>">返回题目</a>
 <a class="btn btn-default pull-right" href="/solution/new?problem=<?= $problem['id'] ?>">添加题解</a>
 <h1 class="page-header text-center"><?= $problem['title'] ?> 题解</h1>
 
