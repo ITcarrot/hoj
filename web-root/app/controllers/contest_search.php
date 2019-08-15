@@ -54,7 +54,7 @@
 
 <form class="text-center bot-buffer-md">
 	<label class="control-label">搜索比赛编号</label>
-	<input class="form-control input-sm" style="width:200px;display:inline;" type="text" name="search" placeholder="输入比赛编号，以,分割" value="<?= join(',',$query) ?>">
+	<input class="form-control input-sm" style="width:160px;display:inline;" type="text" name="search" placeholder="输入比赛编号，以,分割" value="<?= join(',',$query) ?>">
 	<button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-search"></button>
 	<button class="btn btn-primary btn-sm glyphicon glyphicon-save" id="save_btn" <?= $len==0 ? 'disabled="1"' : '' ?>></button>
 </form>

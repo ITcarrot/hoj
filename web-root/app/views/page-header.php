@@ -34,9 +34,6 @@
 	if (!isset($PageMainTitle)) {
 		$PageMainTitle = UOJConfig::$data['profile']['oj-name'];
 	}
-	if (!isset($PageMainTitleOnSmall)) {
-		$PageMainTitleOnSmall = UOJConfig::$data['profile']['oj-name-short'];
-	}
 	if (!isset($ShowPageHeader)) {
 		$ShowPageHeader = true;
 	}
@@ -83,7 +80,7 @@
 		<?php endif ?>
 		
 		<!-- HOJ main js -->
-		<script src="/min/js?v=190407"></script>
+		<script src="/min/js?v=190814"></script>
 		<!-- time -->
 		<script>begin=new Date("<?=preg_replace('/-/','/',UOJTime::$time_now_str)?>").getTime();</script>
 		<?php if (is_array($REQUIRE_LIB)):?>
@@ -146,12 +143,12 @@
 				<?php if($top_msg!=''): ?>
 					<div class="bg-info text-center" style="border-radius: 50px;font-size: medium;padding: 5px;margin: 0 10px;"><?=$top_msg?></div>
 				<?php endif ?>
-				<div>
+				<div class="row">
 					<ul class="nav nav-pills pull-right" role="tablist">
-						<li role="presentation">
+						<li class="hidden-xs" role="presentation">
 							<span style="display: block; width: 145px; text-align: center; height: 50px; padding-top: 15px;">离 NOIP 2019 还有</span>
 						</li>	
-						<li><canvas id="timecanvas" height="40px" width="200px" style="padding-left: 10px;padding-top: 5px;"></canvas></li>
+						<li class="hidden-xs"><canvas id="timecanvas" height="40px" width="200px" style="padding-left: 10px;padding-top: 5px;"></canvas></li>
 						<li><div id="clock">
 							<p class="date" id="clock-date"></p>
 							<p class="time" id="clock-time"></p>
@@ -183,8 +180,7 @@
 							<li role="presentation"><a style="display:block;height:50px;padding-top:15px;" class="signupbtn" href="<?= HTML::url('/register') ?>"><?= UOJLocale::get('register') ?></a></li>
 						<?php endif ?>
 					</ul>
-					<h1 class="hidden-xs"><img src="<?= HTML::url('/pictures/UOJ_small.png') ?>" alt="HOJ Logo" class="img-rounded" style="width:39px; height:39px;" /> <?= $PageMainTitle ?></h1>
-					<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?></h1>
+					<h1 class="hidden-xs" style="margin-top:5px"><img src="<?= HTML::url('/pictures/UOJ_small.png') ?>" alt="HOJ Logo" class="img-rounded" style="width:39px; height:39px;" /> <?= $PageMainTitle ?></h1>
 				</div>
 				<?php uojIncludeView($PageNav) ?>
 			<?php endif ?>

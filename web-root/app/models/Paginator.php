@@ -82,8 +82,10 @@ class Paginator {
 		for ($i = max($this->cur_page - $this->max_extend, 1); $i <= min($this->cur_page + $this->max_extend, $this->n_pages); $i++) {
 			if ($i == $this->cur_page) {
 				$html .= '<li class="active"><a href="'.$this->getPageUri($i).'">'.$i.'</a></li>';
-			} else {
+			} elseif(abs($i - $this->cur_page) == 1) {
 				$html .= '<li><a href="'.$this->getPageUri($i).'">'.$i.'</a></li>';
+			} else {
+				$html .= '<li class="hidden-xs"><a href="'.$this->getPageUri($i).'">'.$i.'</a></li>';
 			}
 		}
 		if ($this->cur_page < $this->n_pages) {
@@ -105,5 +107,3 @@ EOD;
 		return $html;
 	}
 }
-
-

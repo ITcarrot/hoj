@@ -82,14 +82,15 @@
 	</script>
 </ul>
 <div class="row top-buffer-md">
-	<div class="col-sm-3 text-right">
+	<div class="col-sm-2"></div>
+	<div class="col-sm-2 text-center">
 		<label class="top-buffer-sm">设置文件题面：</label>
 	</div>
 	<form method="post" target="file_set">
-		<div class="col-sm-6">
+		<div class="col-sm-3">
 			<input type="text" class="form-control input-sm" name="file" placeholder="输入文件地址" value="<?=$problem_content['file']?>">
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-1 text-center">
 			<input type="submit" class="btn btn-default" value="设置" name="set_file">
 		</div>
 	</form>

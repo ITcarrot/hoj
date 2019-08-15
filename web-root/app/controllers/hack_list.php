@@ -48,14 +48,14 @@
 	}
 ?>
 <?php echoUOJPageHeader(UOJLocale::get('hacks')) ?>
+<?php if ($myUser != null): ?>
+<div class="pull-right">
+	<a class="btn btn-primary btn-sm glyphicon glyphicon-refresh" onclick="javascript:window.location.reload()"></a>
+	<a href="/hacks?hacker=<?= $myUser['username'] ?>" class="btn btn-success btn-sm"><?= UOJLocale::get('problems::hacks by me') ?></a>
+	<a href="/hacks?owner=<?= $myUser['username'] ?>" class="btn btn-danger btn-sm"><?= UOJLocale::get('problems::hacks to me') ?></a>
+</div>
+<?php endif ?>
 <div class="hidden-xs">
-	<?php if ($myUser != null): ?>
-	<div class="pull-right">
-		<a class="btn btn-primary btn-sm glyphicon glyphicon-refresh" onclick="javascript:window.location.reload()"></a>
-		<a href="/hacks?hacker=<?= $myUser['username'] ?>" class="btn btn-success btn-sm"><?= UOJLocale::get('problems::hacks by me') ?></a>
-		<a href="/hacks?owner=<?= $myUser['username'] ?>" class="btn btn-danger btn-sm"><?= UOJLocale::get('problems::hacks to me') ?></a>
-	</div>
-	<?php endif ?>
 	<form id="form-search" class="form-inline" role="form">
 		<div id="form-group-submission_id" class="form-group">
 			<label for="input-submission_id" class="control-label"><?= UOJLocale::get('problems::submission id') ?>:</label>
@@ -89,8 +89,8 @@
 		</div>
 		<button type="submit" id="submit-search" class="btn btn-default btn-sm glyphicon glyphicon-search"></button>
 	</form>
-	<div class="top-buffer-sm"></div>
 </div>
+<div class="visible-xs top-buffer-sm" style="float:left;width:100%"></div>
 <?php
 	echoHacksList($cond, 'order by id desc', array(/*'judge_time_hidden' => ''*/), $myUser);
 ?>

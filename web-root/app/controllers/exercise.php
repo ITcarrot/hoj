@@ -89,7 +89,9 @@
 		echo <<<EOD
 <div class="row bot-buffer-sm"><center><form>
 	&nbsp;&nbsp;用户名：<input class="form-control input-sm" style="display:inline;width:200px;" type="text" name="user" value="{$_GET['user']}" placeholder="模糊匹配">
+	<div class="visible-xs top-buffer-sm"></div>
 	班级姓名：<input class="form-control input-sm" style="display:inline;width:200px;" type="text" name="email" placeholder="模糊匹配" value="{$_GET['email']}">
+	<div class="visible-xs top-buffer-sm"></div>
 	提交记录从&nbsp;<input class="form-control input-sm" style="display:inline;width:75px;" type="text" name="id_from" placeholder="1" value="{$_GET['id_from']}">
 	到&nbsp;<input class="form-control input-sm" style="display:inline;width:75px;" type="text" name="id_to" placeholder="正无穷" value="{$_GET['id_to']}">
 	<button type="submit" class="btn btn-default btn-sm glyphicon glyphicon-search"></button>

@@ -301,7 +301,7 @@ function echoSubmissionsListOnlyOne($submission, $config, $user) {
 	if (!isset($config['submit_time_hidden']))
 		echo '<th>'.UOJLocale::get('problems::submit time').'</th>';
 	if (!isset($config['judge_time_hidden']))
-		echo '<th>'.UOJLocale::get('problems::judge time').'</th>';
+		echo '<th class="hidden-xs">'.UOJLocale::get('problems::judge time').'</th>';
 	echo '</tr>';
 	echo '</thead>';
 	echo '<tbody>';
@@ -859,7 +859,7 @@ function echoHackListOnlyOne($hack, $config, $user) {
 	if (!isset($config['submit_time_hidden']))
 		echo '<th>'.UOJLocale::get('problems::submit time').'</th>';
 	if (!isset($config['judge_time_hidden']))
-		echo '<th>'.UOJLocale::get('problems::judge time').'</th>';
+		echo '<th class="hidden-xs">'.UOJLocale::get('problems::judge time').'</th>';
 	echo '</tr>';
 	echo '</thead>';
 	echo '<tbody>';
@@ -941,7 +941,7 @@ function echoBlog($blog, $config = array()) {
 }
 function echoBlogTag($tag) {
 	global $blog;
-	echo '<a href="',HTML::blog_url($blog['poster'], '/archive?tag='.urlencode($tag)),'"><span class="badge">', HTML::escape($tag), '</span></a>';
+	echo '<a href="',HTML::blog_url(UOJContext::userid() ?? $blog['poster'], '/archive?tag='.urlencode($tag)),'"><span class="badge">', HTML::escape($tag), '</span></a>';
 }
 
 function echoUOJPageHeader($page_title, $extra_config = array()) {

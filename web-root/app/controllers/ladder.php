@@ -108,11 +108,11 @@ EOD;
 ?>
 <?php echoUOJPageHeader('天梯') ?>
 <div class="row">
-<h4 class="col-sm-1 text-right">难度</h4>
+<h4 class="col-sm-1 text-center">难度</h4>
 <div class="col-sm-4">
 	<?=HTML::tablist($tabs_info, $cur_tab, 'nav-pills')?>
 </div>
-<h4 class="col-sm-1 text-right"><nobr>算法标签</nobr></h4>
+<h4 class="col-sm-1 text-center"><nobr>算法标签</nobr></h4>
 <div class="col-sm-5">
 <?php
 	$tag_num=array();
@@ -163,4 +163,3 @@ EOD;
 	}
 ?>
 <?php echoUOJPageFooter() ?>
-

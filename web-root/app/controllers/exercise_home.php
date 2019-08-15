@@ -152,7 +152,7 @@ EOD;
 		</form>
 	</div>
 </div>
-
+<div class="bot-buffer-lg visible-xs"></div>
 <div class="row">
 	<div class="col-sm-2"></div>
 	<div class="col-sm-8"><?php echo $pag->pagination(); ?></div>

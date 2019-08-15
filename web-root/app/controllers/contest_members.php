@@ -125,7 +125,7 @@
 			}
 			echo '<td>'.$contest['user_rating'].'</td>';
 			if ($contest['has_participated'] == 1)
-				echo '<td style="background:#2CBD2E"></td>';
+				echo '<td style="background:#6510ad"></td>';
 			else
 				echo '<td></td>';
 			echo '</tr>';

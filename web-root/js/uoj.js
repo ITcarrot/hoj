@@ -535,6 +535,9 @@ $.fn.long_table = function(data, cur_page, header_row, get_row_str, config) {
 			if (p == cur_page) {
 				li.addClass('active');
 			}
+			if (Math.abs(cur_page - p) > 1 && !isNaN(h)) {
+				li.addClass('hidden-xs');
+			}
 			li.append(
 				$('<a></a>').attr('href', '#' + table_div.id).append(h).click(function(e) {
 					if (config.prevent_focus_on_click) {

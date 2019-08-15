@@ -147,7 +147,47 @@ EOD;
 ?>
 <?php echoUOJPageHeader(UOJLocale::get('problems')) ?>
 <div class="row">
-<div class="col-sm-9">
+<div class="col-sm-3 col-sm-push-9">
+	<div class="panel panel-default">
+	<div class="panel-body">
+		<div class="problem-set-list">
+			<?= HTML::tablist($tabs_info, $cur_tab, 'nav-pills') ?>
+		</div>
+		<form class="top-buffer-md text-center" style="display:flex">
+			<input class="form-control input-sm" style="display:inline;width:200px;" type="text" name="search" placeholder="输入关键字查找题目">
+			<button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-search" style="margin-left:5px"></button>
+		</form>
+		<div class="checkbox text-center">
+			<label class="checkbox-inline" for="input-show_tags_mode"><input type="checkbox" id="input-show_tags_mode" <?= isset($_COOKIE['not_show_tags_mode']) ? '': 'checked="checked"'?>/> <?= UOJLocale::get('problems::show tags') ?></label>
+			<label class="checkbox-inline" for="input-show_submit_mode"><input type="checkbox" id="input-show_submit_mode" <?= isset($_COOKIE['not_show_submit_mode']) ? '': 'checked="checked"'?>/> <?= UOJLocale::get('problems::show statistics') ?></label>
+		</div>
+		<?php if(isSuperUser($myUser)):?>
+			<div class="row">
+			<div style="float:left;position:relative;left:10%">
+				<?php $new_problem_form->printHTML() ?>
+			</div>
+			<div style="float:right;position:relative;right:10%">
+				<div class="text-center">
+					<a href="/autocopy" class="btn btn-primary">自动加题</a>
+				</div>
+			</div>
+			</div>
+		<?php endif ?>
+	</div>
+	</div>
+	<div class="panel panel-info">
+		<div id="problem_tags_title" class="panel-heading collapsed" data-toggle="collapse" data-target="#problem_tags" aria-expanded="false" style="cursor:pointer">
+			<h4 class="panel-title">点击展开标签</h4>
+		</div>
+		<div id="problem_tags" class="panel-collapse collapse" aria-expanded="false">
+		<div class="panel-body" style="line-height:200%">
+			<?php foreach($tag_list as $tag):?>
+				<a class="uoj-problem-tag"><span class="badge"><?=$tag?></span></a>&nbsp;
+			<?php endforeach ?>
+		</div></div>
+	</div>
+</div>
+<div class="col-sm-9 col-sm-pull-3">
 <?php
 	echo $pag->pagination();
 
@@ -167,47 +207,10 @@ EOD;
 	echo $pag->pagination();
 ?>
 </div>
-<div class="col-sm-3">
-	<div class="panel panel-default">
-	<div class="panel-body">
-		<div class="problem-set-list">
-			<?= HTML::tablist($tabs_info, $cur_tab, 'nav-pills') ?>
-		</div>
-		<form class="top-buffer-md text-center" style="display:flex">
-			<input class="form-control input-sm" style="display:inline;width:200px;" type="text" name="search" placeholder="输入关键字查找题目">
-			<button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-search" style="margin-left:5px"></button>
-		</form>
-		<div class="checkbox text-center">
-			<label class="checkbox-inline" for="input-show_tags_mode"><input type="checkbox" id="input-show_tags_mode" <?= isset($_COOKIE['not_show_tags_mode']) ? '': 'checked="checked"'?>/> <?= UOJLocale::get('problems::show tags') ?></label>
-			<label class="checkbox-inline" for="input-show_submit_mode"><input type="checkbox" id="input-show_submit_mode" <?= isset($_COOKIE['not_show_submit_mode']) ? '': 'checked="checked"'?>/> <?= UOJLocale::get('problems::show statistics') ?></label>
-		</div>
-		<?php if(isSuperUser($myUser)):?>
-			<div class="row">
-			<div class="col-sm-6">
-				<?php $new_problem_form->printHTML() ?>
-			</div>
-			<div class="col-sm-6">
-				<div class="text-center">
-					<a href="/autocopy" class="btn btn-primary">自动加题</a>
-				</div>
-			</div>
-			</div>
-		<?php endif ?>
-	</div>
-	</div>
-	<div class="panel panel-info">
-		<div class="panel-heading">
-			<h4 class="panel-title">标签</h4>
-		</div>
-		<div class="panel-body" style="line-height:200%">
-			<?php foreach($tag_list as $tag):?>
-				<a class="uoj-problem-tag"><span class="badge"><?=$tag?></span></a>&nbsp;
-			<?php endforeach ?>
-		</div>
-	</div>
-</div>
 </div>
 <script type="text/javascript">
+if(window.innerWidth >= 768)
+	$('#problem_tags_title').click();
 $('#input-show_tags_mode').click(function() {
 	if (this.checked) {
 		$.removeCookie('not_show_tags_mode', {path: '/problems'});

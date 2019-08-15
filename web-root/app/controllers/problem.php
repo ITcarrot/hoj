@@ -137,22 +137,14 @@
 	$REQUIRE_LIB['shjs'] = '';
 ?>
 <?php echoUOJPageHeader(HTML::stripTags($problem['title']) . ' - ' . UOJLocale::get('problems::problem')) ?>
-<div class="pull-right">
-	<?= getClickZanBlock('P', $problem['id'], $problem['zan']) ?>
-</div>
-<?php if ($contest): ?>
 	<div class="page-header row">
+<?php if ($contest): ?>
 		<h1 class="col-md-3 text-left"><small><?= $contest['name'] ?></small></h1>
 		<h1 class="col-md-6 text-center"><?= $problem_letter ?>. <?= $problem['title'] ?></h1>
-		<div class="col-md-3 text-right" id="contest-countdown"></div>
-	</div>
-	<h4 class="text-center">时间限制：<?= $problem['time_limit'] ?>ms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	空间限制：<?= $problem['memory_limit'] ?>M</h4>
-	<a role="button" class="btn btn-info pull-right" href="/contest/<?= $contest['id'] ?>/problem/<?= $problem['id'] ?>/statistics">
-	<span class="glyphicon glyphicon-stats"></span>
-	<?= UOJLocale::get('problems::statistics') ?></a>
-	<a role="button" class="btn btn-info pull-right" href="/submissions?problem_id=<?= $problem['id'] ?>"><span class="glyphicon glyphicon-list"></span> 本题提交记录</a>
-
+		<div class="col-md-3 text-right">
+			<div id="contest-countdown"></div>
+			<?= getClickZanBlock('P', $problem['id'], $problem['zan']) ?>
+		</div>
 	<?php if ($contest['cur_progress'] <= CONTEST_IN_PROGRESS): ?>
 		<script type="text/javascript">
 			checkContestNotice(<?= $contest['id'] ?>, '<?= UOJTime::$time_now_str ?>');
@@ -160,17 +152,20 @@
 		</script>
 	<?php endif ?>
 <?php else: ?>
-	<h1 class="page-header text-center">#<?= $problem['id']?>. <?= $problem['title'] ?></h1>
-	<h4 class="text-center">时间限制：<?= $problem['time_limit'] ?>ms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	空间限制：<?= $problem['memory_limit'] ?>M
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
-	<a role="button" class="btn btn-info pull-right" href="/problem/<?= $problem['id'] ?>/solution"><span class="glyphicon glyphicon-book"></span> 题解</a>
-	<a role="button" class="btn btn-info pull-right" href="/problem/<?= $problem['id'] ?>/statistics">
-	<span class="glyphicon glyphicon-stats"></span>
-	<?= UOJLocale::get('problems::statistics') ?></a>
-	<a role="button" class="btn btn-info pull-right" href="/submissions?problem_id=<?= $problem['id'] ?>"><span class="glyphicon glyphicon-list"></span> 本题提交记录</a>
+	<div class="col-sm-2"></div>
+	<h1 class="col-sm-8 text-center">#<?= $problem['id']?>. <?= $problem['title'] ?></h1>
+	<div class="col-sm-2 text-right"><?= getClickZanBlock('P', $problem['id'], $problem['zan']) ?></div>
 <?php endif ?>
-
+	</div>
+	<h4 class="text-center">时间限制：<?= $problem['time_limit'] ?>ms &nbsp;&nbsp;&nbsp; 空间限制：<?= $problem['memory_limit'] ?>M</h4>
+<?php if ($contest): ?>
+	<a role="button" class="btn btn-info pull-right" href="/contest/<?= $contest['id'] ?>/problem/<?= $problem['id'] ?>/statistics"><span class="glyphicon glyphicon-stats"></span> <?= UOJLocale::get('problems::statistics') ?></a>
+<?php else: ?>
+	<a role="button" class="btn btn-info pull-right" href="/problem/<?= $problem['id'] ?>/solution"><span class="glyphicon glyphicon-book"></span> 题解</a>
+	<a role="button" class="btn btn-info pull-right" href="/problem/<?= $problem['id'] ?>/statistics"><span class="glyphicon glyphicon-stats"></span> <?= UOJLocale::get('problems::statistics') ?></a>
+<?php endif ?>
+	<a role="button" class="btn btn-info pull-right" href="/submissions?problem_id=<?= $problem['id'] ?>"><span class="glyphicon glyphicon-list"></span> 本题提交记录</a>
+<div class="top-buffer-sm visible-xs" style="float:right;width:100%"></div>
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active"><a href="#tab-statement" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-book"></span> <?= UOJLocale::get('problems::statement') ?></a></li>
 	<li><a href="#tab-submit-answer" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-upload"></span> <?= UOJLocale::get('problems::submit') ?></a></li>

@@ -37,12 +37,12 @@
 	}
 ?>
 <?php echoUOJPageHeader(UOJLocale::get('submissions')) ?>
+<?php if ($myUser != null): ?>
+<div class="pull-right">
+	<a href="/submissions?submitter=<?= $myUser['username'] ?>" class="btn btn-primary btn-sm"><?= UOJLocale::get('problems::my submissions') ?></a>
+</div>
+<?php endif ?>
 <div class="hidden-xs">
-	<?php if ($myUser != null): ?>
-	<div class="pull-right">
-		<a href="/submissions?submitter=<?= $myUser['username'] ?>" class="btn btn-primary btn-sm"><?= UOJLocale::get('problems::my submissions') ?></a>
-	</div>
-	<?php endif ?>
 	<form id="form-search" class="form-inline" method="get">
 		<div id="form-group-problem_id" class="form-group">
 			<label for="input-problem_id" class="control-label"><?= UOJLocale::get('problems::problem id')?>:</label>
@@ -67,8 +67,8 @@
 		</div>
 		<button type="submit" id="submit-search" class="btn btn-default btn-sm glyphicon glyphicon-search"></button>
 	</form>
-	<div class="top-buffer-sm"></div>
 </div>
+<div class="visible-xs top-buffer-sm" style="float:left;width:100%"></div>
 <?php
 	echoSubmissionsList($cond, 'order by id desc', array(/*'judge_time_hidden' => '',*/'table_config' => array('page_len' => 15)), $myUser);
 ?>
