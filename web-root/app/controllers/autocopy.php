@@ -161,14 +161,18 @@
 		DB::query("update problems_contents set statement='".DB::escape($content)."', statement_md='".DB::escape($content_md)."' where id=$id");
 		DB::manage_log('problems','autocopy edit problem '.$id.' statement');
 		
+		session_write_close();
 		$data_dir = "/var/uoj_data/$id/";
-		$tmp_dir = '/tmp/autocopy';
+		$tmp_dir = '/tmp/autocopy'.$id;
 		exec("rm -r $tmp_dir; mkdir $tmp_dir");
 		$url = EscapeShellCmd("https://loj.ac/problem/$pid/testdata/download");
 		exec("wget -O $tmp_dir/data.zip $url");
-		if(!is_file("$tmp_dir/data.zip"))
+		if(!is_file("$tmp_dir/data.zip")){
+			exec("rm -r $tmp_dir");
 			die('下载数据失败！');
+		}
 		exec("cd $tmp_dir; unzip data.zip");
+		session_start();
 		
 		$n_tests = 0;
 		$set_filename = $data_dir."problem.conf";
@@ -222,7 +226,8 @@
 		}
 		fclose($set_file);
 		DB::manage_log('problems','autocopy update problem '.$id.' data and settings');
-
+		
+		exec("rm -r $tmp_dir");
 		$ret = svnSyncProblemData(queryProblemBrief($id));
 		if ($ret)
 			die($ret);

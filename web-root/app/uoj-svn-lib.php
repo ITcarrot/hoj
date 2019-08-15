@@ -135,7 +135,8 @@
 			if (file_exists($this->prepare_dir)) {
 				return "please wait until the last sync finish";
 			}
-
+			session_write_close();
+			
 			try {
 				$this->requirement = array();
 				$this->problem_extra_config = json_decode($this->problem['extra_config'], true);
@@ -258,6 +259,7 @@
 			exec("rm {$this->prepare_dir} -r");
 			svnJudger($id);
 			
+			session_start();
 			return '';
 		}
 	}

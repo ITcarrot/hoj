@@ -349,7 +349,7 @@ EOD;
 		 if ($contest['cur_progress'] <= CONTEST_TESTING)
 		echo '<meta http-equiv="refresh" content="'.($contest['cur_progress'] == CONTEST_TESTING?'5':'10').';url=/contest/'.$contest['id'].'/standings">';
 
-		echo '<center><strong>本次比赛排名的第二关键字为<font color="red">'.($contest['extra_config']['standings_version'] >= 2 ? '程序总运行时间' : '罚时' ).'</font></strong></center>';
+		echo '<center><strong>本次比赛排名的第二关键字为<font class="text-danger">'.($contest['extra_config']['standings_version'] >= 2 ? '程序总运行时间' : '罚时' ).'</font></strong></center>';
 		echo '<div id="standings">';
 		echo '</div>';
 
@@ -484,7 +484,7 @@ EOD;
 	<?php if(isset($contest['extra_config']['unrated'])):?>
 		<h4 style="color:red;">本次比赛不计rating</h4>
 	<?php else:?>
-		<h4>本次比赛rating变化上限为<font color="red"><?= isset($contest['extra_config']['rating_k']) ? $contest['extra_config']['rating_k'] : 400 ?></font></h4>
+		<h4>本次比赛rating变化上限为<font class="text-danger"><?= isset($contest['extra_config']['rating_k']) ? $contest['extra_config']['rating_k'] : 400 ?></font></h4>
 	<?php endif ?>
 	<?= getClickZanBlock('C', $contest['id'], $contest['zan']) ?>
 </div>
@@ -534,8 +534,8 @@ EOD;
 	<?php endif ?>	
 	<p><strong>请使用标准输入输出</strong></p>
 	<p><strong>每题得分以最后一次提交为准</strong></p>
-	<p><strong>本次比赛排名的第二关键字为<font color="red"><?=$contest['extra_config']['standings_version'] >= 2 ? '程序总运行时间' : '罚时' ?></font></strong></p>
-	<p><strong>如无特别说明，比赛期间提交结果<font color="red">不是最终结果</font>，只要返回<span style="color: rgb(0, 204, 0);">100</span>或<font color="blue">Judgement Failed</font>都是提交成功</strong></p>
+	<p><strong>本次比赛排名的第二关键字为<font class="text-danger"><?=$contest['extra_config']['standings_version'] >= 2 ? '程序总运行时间' : '罚时' ?></font></strong></p>
+	<p><strong>如无特别说明，比赛期间提交结果<font class="text-danger">不是最终结果</font></strong></p>
 		<?php if ($cur_tab == 'standings'): ?>
 	</div>
 	<div class="col-sm-3">
@@ -551,6 +551,7 @@ EOD;
 		<?php if (isset($publish_result_form)): ?>
 		<div class="top-buffer-sm">
 			<p><strong>请注意！必须等待所有评测结束后方可公布成绩！不然会使排行榜封榜！</strong></p>
+			<p><strong>请注意！<span class="text-danger">首次</span>公布成绩前应在参赛者列表中“重新计算参赛前的 rating”！不然会使Rating计算出现异常！</strong></p>
 			<?php $publish_result_form->printHTML(); ?>
 		</div>
 		<?php endif ?>
