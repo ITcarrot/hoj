@@ -15,6 +15,7 @@
 	$problem_extra_config=json_decode($problem['extra_config'],true);
 	$problem_languages = isset($submission_requirement[0]['languages']) ? $submission_requirement[0]['languages'] : $uojSupportedLanguages;
 	$data_dir = "/var/uoj_data/${problem['id']}";
+	$prepare_dir = "/var/uoj_data/prepare/${problem['id']}";
 	$problem_conf = getUOJConf("$data_dir/problem.conf");
 	if ($problem_conf === -1) {
 		$problem_conf = array();
@@ -513,6 +514,102 @@
 		$chk_form->runAtServer();
 	}
 	
+	//generator's form
+	$gen_form = new UOJForm('gen_form');
+	$gen_form->addInput('gen_n_tests', 'text', '测试点数量', '10',
+		function($n_tests){
+			if(!validateUInt($n_tests) || $n_tests <= 0 || $n_tests > 600)
+				return '测试点数量应为1~600间的整数';
+		}, null);
+	$gen_form->extra_validator = function(){
+		global $data_dir, $prepare_dir;
+		if(file_exists($prepare_dir))
+			return "please wait until the last sync finish";
+		if(!file_exists($data_dir.'/gen.cpp'))
+			return '找不到gen.cpp';
+		if(!file_exists($data_dir.'/std.cpp'))
+			return '找不到std.cpp';
+	};
+	$gen_form->handle = function(){
+		global $data_dir, $prepare_dir,$problem;
+		$n_tests = $_POST['gen_n_tests'];
+		$time_limit = (int)(600/$n_tests);
+		$output_limit = (int)(512/$n_tests);
+		$runner = $_SERVER['DOCUMENT_ROOT']."/app/models/run_program";
+		exec("mkdir $prepare_dir");
+		session_write_close();
+		try{
+			$cmd_prefix = "$runner >$prepare_dir/run_compiler_result.txt --in=/dev/null --out=stderr --err=$prepare_dir/compiler_result.txt --tl=10 --ml=512 --ol=64 --type=compiler --work-path=$prepare_dir";
+			exec("cp $data_dir/gen.cpp $prepare_dir/gen.cpp");
+			exec("$cmd_prefix /usr/bin/g++ -o gen gen.cpp -lm -Ofast -DONLINE_JUDGE -std=c++17");
+			$fp = fopen("$prepare_dir/run_compiler_result.txt", "r");
+			if (fscanf($fp, '%d %d %d %d', $rs, $used_time, $used_memory, $exit_code) != 4) {
+				$rs = 7;
+			}
+			fclose($fp);
+			if ($rs != 0 || $exit_code != 0) {
+				if ($rs == 0) {
+					throw new Exception("<strong>Generator</strong> : compile error<pre>\n" . uojFilePreview("$prepare_dir/compiler_result.txt", 500) . "\n</pre>");
+				} elseif ($rs == 7) {
+					throw new Exception("<strong>Generator</strong> : compile error. No comment");
+				} else {
+					throw new Exception("<strong>Generator</strong> : compile error. Compiler " . judgerCodeStr($rs));
+				}
+			}
+			
+			exec("cp $data_dir/std.cpp $prepare_dir/std.cpp");
+			exec("$cmd_prefix /usr/bin/g++ -o std std.cpp -lm -Ofast -DONLINE_JUDGE -std=c++17");
+			$fp = fopen("$prepare_dir/run_compiler_result.txt", "r");
+			if (fscanf($fp, '%d %d %d %d', $rs, $used_time, $used_memory, $exit_code) != 4) {
+				$rs = 7;
+			}
+			fclose($fp);
+			if ($rs != 0 || $exit_code != 0) {
+				if ($rs == 0) {
+					throw new Exception("<strong>Std</strong> : compile error<pre>\n" . uojFilePreview("$prepare_dir/compiler_result.txt", 500) . "\n</pre>");
+				} elseif ($rs == 7) {
+					throw new Exception("<strong>Std</strong> : compile error. No comment");
+				} else {
+					throw new Exception("<strong>Std</strong> : compile error. Compiler " . judgerCodeStr($rs));
+				}
+			}
+			
+			for($i = 1;$i <= $n_tests;$i++){
+				file_put_contents("$prepare_dir/input",$i);
+				exec("$runner >$prepare_dir/run_program_result.txt --in=$prepare_dir/input --out=$prepare_dir/hoj$i.in --err=/dev/null --tl=$time_limit --ml=2048 --ol=$output_limit --work-path=$prepare_dir ./gen");
+				$fp = fopen("$prepare_dir/run_program_result.txt", "r");
+				if (fscanf($fp, '%d %d %d %d', $rs, $used_time, $used_memory, $exit_code) != 4) {
+					$rs = 7;
+				}
+				fclose($fp);
+				if ($rs != 0)
+					throw new Exception("<strong>Generator in test $i</strong> : " . judgerCodeStr($rs));
+				
+				exec("$runner >$prepare_dir/run_program_result.txt --in=$prepare_dir/hoj$i.in --out=$prepare_dir/hoj$i.out --err=/dev/null --tl=$time_limit --ml=2048 --ol=$output_limit --work-path=$prepare_dir ./std");
+				$fp = fopen("$prepare_dir/run_program_result.txt", "r");
+				if (fscanf($fp, '%d %d %d %d', $rs, $used_time, $used_memory, $exit_code) != 4) {
+					$rs = 7;
+				}
+				fclose($fp);
+				if ($rs != 0)
+					throw new Exception("<strong>Std in test $i</strong> : " . judgerCodeStr($rs));
+			}
+			for($i = 1;$i <= $n_tests;$i++){
+				exec("cp $prepare_dir/hoj$i.in $data_dir/hoj$i.in");
+				exec("cp $prepare_dir/hoj$i.out $data_dir/hoj$i.out");
+			}
+		}catch(Exception $e) {
+			exec("rm $prepare_dir -r");
+			becomeMsgPage('<div>' . $e->getMessage() . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
+		}
+		exec("rm $prepare_dir -r");
+		session_start();
+	};
+	$gen_form->submit_button_config['class_str'] = 'btn btn-danger';
+	$gen_form->submit_button_config['text'] = '开始生成';
+	$gen_form->submit_button_config['smart_confirm'] = '';
+	$gen_form->runAtServer();
+	
 	//stdval's form
 	if($problem['hackable']==1) {
 		$val_form = new UOJForm('val_form');
@@ -754,6 +851,16 @@ EOD;
 			echo '<h4>use_builtin_checker: ',$chk,'</h4>';
 		}
 	}
+	function echoGenerator(){
+		global $gen_form;
+		echo '<h3>在线生成数据</h3>';
+		echo '<p>上传gen.cpp和std.cpp，在线生成输入文件hojX.in和输出文件hojX.out，X为数据编号</p>';
+		echo '<p>gen.cpp中请从标准输入读入一个整数，表示数据编号，并将数据输出到标准输出</p>';
+		echo '<p>生成一个输入文件时间不得超过 600/测试点数目s，std运行一次时间不得超过600/测试点数目s，程序运行空间限制2048MB，生成的单个文件大小不得超过512/测试点数目MB</p>';
+		$gen_form->printHTML();
+		echoFilePre('gen.cpp','cpp');
+		echoFilePre('std.cpp','cpp');
+	}
 	function echoStdVal(){
 		global $val_form;
 		echo '<h4>快捷提交Val：</h4>';
@@ -793,6 +900,7 @@ EOD;
 			case 'test':echoTest();break;
 			case 'extest':echoExtests();break;
 			case 'chk':echoChecker();break;
+			case 'gen':echoGenerator();break;
 			case 'hack':echoStdVal();break;
 			case 'require':echoRequire();break;
 		}
@@ -824,6 +932,7 @@ EOD;
 				<li id="extest-btn"><a onclick="show_frame('extest')">Extra Tests</a></li>
 			<?php endif ?>
 			<li id="chk-btn"><a onclick="show_frame('chk')">Checker</a></li>
+			<li id="gen-btn"><a onclick="show_frame('gen')">Generator</a></li>
 			<?php if($problem['hackable']==1):?>
 				<li id="hack-btn"><a onclick="show_frame('hack')">Std &amp; Val</a></li>
 			<?php endif ?>
@@ -991,6 +1100,7 @@ EOD;
 			<div id="extest" style="display:none"></div>
 		<?php endif ?>
 		<div id="chk" style="display:none"></div>
+		<div id="gen" style="display:none"></div>
 		<?php if($problem['hackable']==1):?>
 			<div id="hack" style="display:none"></div>
 		<?php endif ?>
@@ -1028,7 +1138,7 @@ EOD;
 </div>
 
 <script>
-var frames=['problem','data','exdata','test','extest','chk','hack','require'];
+var frames=['problem','data','exdata','test','extest','chk','hack','require','gen'];
 function clear_page()
 {
 	$.each(frames,function(){
