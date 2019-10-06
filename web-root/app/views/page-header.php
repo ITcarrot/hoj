@@ -146,7 +146,7 @@
 				<div class="row">
 					<ul class="nav nav-pills pull-right" role="tablist">
 						<li class="hidden-xs" role="presentation">
-							<span style="display: block; width: 145px; text-align: center; height: 50px; padding-top: 15px;">离 NOIP 2019 还有</span>
+							<span style="display: block; width: 145px; text-align: center; height: 50px; padding-top: 15px;">离 CSP 2019 还有</span>
 						</li>	
 						<li class="hidden-xs"><canvas id="timecanvas" height="40px" width="200px" style="padding-left: 10px;padding-top: 5px;"></canvas></li>
 						<li><div id="clock">

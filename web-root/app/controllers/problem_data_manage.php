@@ -114,8 +114,12 @@
 	
 	$hackable_form = new UOJForm('hackable');
 	$hackable_form->handle = function() {
-		global $problem;
+		global $problem, $myUser;
 		$problem['hackable'] = 1 - $problem['hackable'];
+		$ret = svnSyncProblemData($problem, $myUser);
+		if ($ret) {
+			becomeMsgPage('<div>' . $ret . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
+		}
 		DB::query("update problems set hackable = {$problem['hackable']} where id = ${problem['id']}");
 		DB::manage_log('problems','set problem '.$problem['id'].' hackable='.$problem['hackable']);
 	};
@@ -611,18 +615,16 @@
 	$gen_form->runAtServer();
 	
 	//stdval's form
-	if($problem['hackable']==1) {
-		$val_form = new UOJForm('val_form');
-		$val_form->addSourceCodeInput("val", UOJLocale::get('problems::source code').':val.cpp', array('C++'));
-		$val_form->handle = function() {
-			global $data_dir;
-			if ($_POST["val_upload_type"] == 'editor') {
-				file_put_contents($data_dir.'/val.cpp',$_POST["val_editor"]);
-			}
-		};
-		$val_form->submit_button_config['text'] = '保存';
-		$val_form->runAtServer();
-	}
+	$val_form = new UOJForm('val_form');
+	$val_form->addSourceCodeInput("val", UOJLocale::get('problems::source code').':val.cpp', array('C++'));
+	$val_form->handle = function() {
+		global $data_dir;
+		if ($_POST["val_upload_type"] == 'editor') {
+			file_put_contents($data_dir.'/val.cpp',$_POST["val_editor"]);
+		}
+	};
+	$val_form->submit_button_config['text'] = '保存';
+	$val_form->runAtServer();
 	
 	//界面
 	function echoExData(){
@@ -933,9 +935,7 @@ EOD;
 			<?php endif ?>
 			<li id="chk-btn"><a onclick="show_frame('chk')">Checker</a></li>
 			<li id="gen-btn"><a onclick="show_frame('gen')">Generator</a></li>
-			<?php if($problem['hackable']==1):?>
-				<li id="hack-btn"><a onclick="show_frame('hack')">Std &amp; Val</a></li>
-			<?php endif ?>
+			<li id="hack-btn"><a onclick="show_frame('hack')">Std &amp; Val</a></li>
 			<?php if($problem_type == 'interactive'):?>
 				<li id="require-btn"><a onclick="show_frame('require')">Require</a></li>
 			<?php endif ?>
@@ -1101,9 +1101,7 @@ EOD;
 		<?php endif ?>
 		<div id="chk" style="display:none"></div>
 		<div id="gen" style="display:none"></div>
-		<?php if($problem['hackable']==1):?>
-			<div id="hack" style="display:none"></div>
-		<?php endif ?>
+		<div id="hack" style="display:none"></div>
 		<?php if($problem_type == 'interactive'):?>
 			<div id="require" style="display:none"></div>
 		<?php endif ?>
