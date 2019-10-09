@@ -285,7 +285,7 @@ EOD;
 			function($notice) {
 				echo '<tr>';
 				echo '<td>', HTML::escape($notice['title']), '</td>';
-				echo '<td style="white-space:pre-wrap; text-align: left">', $notice['content'], '</td>';
+				echo '<td style="white-space:pre-wrap; text-align: left">', HTML::escape($notice['content']), '</td>';
 				echo '<td>', $notice['time'], '</td>';
 				echo '</tr>';
 			},
@@ -430,32 +430,34 @@ EOD;
 EOD;
 	}
 	
-	$post_notice = new UOJForm('post_notice');
-	$post_notice->addInput('title', 'text', '标题', '',
-		function($title) {
-			if (!$title) {
-				return '标题不能为空';
-			}
-			return '';
-		},
-		null
-	);
-	$post_notice->addTextArea('content', '正文', '', 
-		function($content) {
-			if (!$content) {
-				return '公告不能为空';
-			}
-			return '';
-		},
-		null
-	);
-	$post_notice->handle = function() {
-		global $contest;
-		$title = DB::escape($_POST['title']);
-		$content = DB::escape($_POST['content']);
-		DB::query("insert into contests_notice (contest_id, title, content, time) values ('{$contest['id']}', '$title', '$content', now())");
-	};
-	$post_notice->runAtServer();
+	if (hasContestPermission($myUser, $contest)) {
+		$post_notice = new UOJForm('post_notice');
+		$post_notice->addInput('title', 'text', '标题', '',
+			function($title) {
+				if (!$title) {
+					return '标题不能为空';
+				}
+				return '';
+			},
+			null
+		);
+		$post_notice->addTextArea('content', '正文', '', 
+			function($content) {
+				if (!$content) {
+					return '公告不能为空';
+				}
+				return '';
+			},
+			null
+		);
+		$post_notice->handle = function() {
+			global $contest;
+			$title = DB::escape($_POST['title']);
+			$content = DB::escape($_POST['content']);
+			DB::query("insert into contests_notice (contest_id, title, content, time) values ('{$contest['id']}', '$title', '$content', now())");
+		};
+		$post_notice->runAtServer();
+	}
 	
 	$tabs_info = array(
 		'dashboard' => array(
