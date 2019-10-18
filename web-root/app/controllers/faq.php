@@ -70,7 +70,7 @@
 			<li id="list_btn3"><a onclick="list(3)">个人信息及博客指南</a></li>
 			<ul class="nav nav-pills nav-stacked" id="list3" style="display:none;padding-left:1em;">
 				<li id="show_btn8"><a onclick="show(8)">用户功能与设置</a></li>
-				<li id="show_btn9"><a onclick="show(9)">Markdown和LATeX教程</a></li>
+				<li id="show_btn9"><a onclick="show(9)">Markdown和MathJax教程</a></li>
 				<li id="show_btn10"><a onclick="show(10)">HTML教程</a></li>
 				<li id="show_btn11"><a onclick="show(11)">日志系统</a></li>
 				<li id="show_btn12"><a onclick="show(12)">幻灯片使用指南</a></li>
