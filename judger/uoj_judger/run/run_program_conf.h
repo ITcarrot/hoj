@@ -507,6 +507,7 @@ void init_conf(const RunProgramConfig &config) {
 		readable_file_name_set.insert("/etc/fpc.cfg");
 
 		statable_file_name_set.insert("/*");
+		statable_file_name_set.insert("/snap/bin/*");
 	}
 }
 
